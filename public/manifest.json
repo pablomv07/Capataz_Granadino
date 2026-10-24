@@ -1,0 +1,27 @@
+{
+  "id": "/",
+  "name": "El Capataz Granadino - Semana Santa",
+  "short_name": "El Capataz",
+  "description": "IA experta en la Semana Santa de Granada con respuestas concisas, 32 hermandades, horarios e itinerarios.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#120524",
+  "theme_color": "#1b0833",
+  "categories": ["lifestyle", "culture", "education"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

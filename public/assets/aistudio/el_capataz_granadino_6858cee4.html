@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Capataz Granadino - Asistente Cofrade Conciso</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cuaresma: '#2E1065',
+                        moradoDark: '#1E0B36',
+                        oro: '#D97706',
+                        oroLight: '#FBBF24',
+                        cofradeAccent: '#4C1D95'
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FDE68A 0%, #D97706 50%, #B45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border-color: #D97706;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: rgba(46, 16, 101, 0.3);
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #D97706;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-moradoDark text-gray-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="bg-cuaresma border-b-2 border-oro shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-oro to-oroLight flex items-center justify-center text-moradoDark font-bold text-xl shadow-md">
+                    <i class="fa-solid font-cinzel">CG</i>
+                </div>
+                <div>
+                    <h1 class="font-cinzel text-xl md:text-2xl font-bold gold-gradient-text">EL CAPATAZ GRANADINO</h1>
+                    <p class="text-xs text-yellow-200/70">Asistente Cofrade Directo y Conciso</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex flex-wrap justify-center gap-1 sm:gap-2 text-xs md:text-sm font-medium">
+                <button onclick="switchTab('asistente')" id="tab-asistente" class="tab-btn active px-3 py-1.5 rounded-lg bg-oro text-moradoDark font-bold shadow flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-comments"></i> Capataz IA
+                </button>
+                <button onclick="switchTab('calendario')" id="tab-calendario" class="tab-btn px-3 py-1.5 rounded-lg hover:bg-cofradeAccent text-gray-200 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-calendar-days"></i> Semana Santa '27
+                </button>
+                <button onclick="switchTab('glosario')" id="tab-glosario" class="tab-btn px-3 py-1.5 rounded-lg hover:bg-cofradeAccent text-gray-200 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-book-bible"></i> Glosario
+                </button>
+                <button onclick="switchTab('guia')" id="tab-guia" class="tab-btn px-3 py-1.5 rounded-lg hover:bg-cofradeAccent text-gray-200 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-map-location-dot"></i> Guía
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-3 py-1.5 rounded-lg hover:bg-cofradeAccent text-gray-200 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-award"></i> Quiz
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-6xl w-full mx-auto p-3 sm:p-6 flex-grow">
+
+        <!-- TAB 1: ASISTENTE CAPATAZ IA (RESPUESTAS CONCISAS) -->
+        <section id="sec-asistente" class="tab-content flex flex-col h-[calc(100vh-170px)] min-h-[500px]">
+            <!-- Indicador Modo Resumido Activo -->
+            <div class="bg-cuaresma/80 border border-oro/40 rounded-t-xl p-3 flex justify-between items-center text-xs sm:text-sm text-yellow-200">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+                    <span class="font-semibold text-white"><i class="fa-solid fa-bolt text-oro mr-1"></i>Modo Respuestas Directas y Ultra-Resumidas</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="btnTTS" onclick="toggleTTS()" class="px-2 py-1 bg-moradoDark/80 rounded border border-oro/30 hover:border-oro flex items-center gap-1 text-xs text-yellow-300">
+                        <i id="iconTTS" class="fa-solid fa-volume-high"></i> Voz IA
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Output -->
+            <div id="chatBox" class="flex-grow bg-moradoDark/60 border-x border-oro/30 p-4 overflow-y-auto space-y-3 scrollbar-thin text-sm sm:text-base">
+                <!-- Chat mensaje inicial -->
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-oro text-moradoDark font-bold flex items-center justify-center shrink-0 text-xs">CG</div>
+                    <div class="bg-cuaresma border border-oro/30 rounded-2xl rounded-tl-none p-3 max-w-[85%] text-gray-200 shadow">
+                        <p class="font-semibold text-oro mb-1 text-xs">El Capataz Granadino</p>
+                        <p>¡A esta es! Pregúntame sobre horarios, calles, procesiones o historia de la Semana Santa de Granada. <strong>Tus respuestas serán cortas, al grano y sin rodeos.</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Inputs -->
+            <div class="bg-cuaresma border border-oro/40 rounded-b-xl p-3 flex flex-col gap-2">
+                <!-- Sugerencias rápidas -->
+                <div class="flex gap-2 overflow-x-auto pb-1 text-xs scrollbar-thin">
+                    <button onclick="sendQuickPrompt('¿Cuándo sale la Aurora y su recorrido clave?')" class="bg-moradoDark hover:bg-cofradeAccent px-2.5 py-1 rounded-full border border-oro/30 text-yellow-200 whitespace-nowrap transition">
+                        🌸 La Aurora
+                    </button>
+                    <button onclick="sendQuickPrompt('¿Qué ver el Jueves Santo en el Albaicín?')" class="bg-moradoDark hover:bg-cofradeAccent px-2.5 py-1 rounded-full border border-oro/30 text-yellow-200 whitespace-nowrap transition">
+                        🏛️ Jueves Santo Albaicín
+                    </button>
+                    <button onclick="sendQuickPrompt('¿Qué es la Carrera Oficial de Granada?')" class="bg-moradoDark hover:bg-cofradeAccent px-2.5 py-1 rounded-full border border-oro/30 text-yellow-200 whitespace-nowrap transition">
+                        📍 Carrera Oficial
+                    </button>
+                    <button onclick="sendQuickPrompt('Mejores puntos para ver al Cristo de los Gitano')" class="bg-moradoDark hover:bg-cofradeAccent px-2.5 py-1 rounded-full border border-oro/30 text-yellow-200 whitespace-nowrap transition">
+                        🔥 Los Gitanos
+                    </button>
+                </div>
+
+                <form onsubmit="handleChatSubmit(event)" class="flex gap-2 items-center">
+                    <button type="button" id="btnVoiceRec" onclick="toggleVoiceRecognition()" class="w-10 h-10 rounded-xl bg-moradoDark hover:bg-cofradeAccent border border-oro/40 flex items-center justify-center text-oro transition shrink-0" title="Activar micrófono">
+                        <i id="micIcon" class="fa-solid fa-microphone"></i>
+                    </button>
+                    <input type="text" id="userInput" placeholder="Escribe tu duda cofrade (ej: ¿Horario del Greñúo?)..." class="flex-grow bg-moradoDark border border-oro/30 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-oro text-sm">
+                    <button type="submit" id="btnSend" class="bg-gradient-to-r from-oro to-oroLight hover:opacity-90 text-moradoDark font-bold px-4 py-2 rounded-xl flex items-center gap-2 transition text-sm shrink-0">
+                        <span>Enviar</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 2: CALENDARIO Y HERMANDADES 2027 -->
+        <section id="sec-calendario" class="tab-content hidden space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-oro/30 pb-3">
+                <div>
+                    <h2 class="text-xl font-bold font-cinzel text-oro">Semana Santa Granada 2027</h2>
+                    <p class="text-xs text-gray-300">Las 32 Hermandades de Penitencia - Horarios y Salidas Provisional</p>
+                </div>
+                <!-- Filtro por Día -->
+                <select id="dayFilter" onchange="filterHermandades()" class="bg-cuaresma border border-oro/40 rounded-lg px-3 py-1.5 text-xs sm:text-sm text-yellow-200 focus:outline-none">
+                    <option value="todos">Todos los días (32 Hermandades)</option>
+                    <option value="Domingo de Ramos">Domingo de Ramos</option>
+                    <option value="Lunes Santo">Lunes Santo</option>
+                    <option value="Martes Santo">Martes Santo</option>
+                    <option value="Miércoles Santo">Miércoles Santo</option>
+                    <option value="Jueves Santo">Jueves Santo</option>
+                    <option value="Viernes Santo">Viernes Santo</option>
+                    <option value="Sábado Santo">Sábado Santo</option>
+                    <option value="Domingo de Resurrección">Domingo de Resurrección</option>
+                </select>
+            </div>
+
+            <!-- Listado de Cofradías -->
+            <div id="hermandadesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Se rellena con JS -->
+            </div>
+        </section>
+
+        <!-- TAB 3: GLOSARIO COFRADE -->
+        <section id="sec-glosario" class="tab-content hidden space-y-4">
+            <div class="border-b border-oro/30 pb-3 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <div>
+                    <h2 class="text-xl font-bold font-cinzel text-oro">Glosario Cofrade Granadino</h2>
+                    <p class="text-xs text-gray-300">Términos esenciales para entender la Semana Santa en la capital nazarí</p>
+                </div>
+                <input type="text" id="searchGlosario" oninput="filterGlosario()" placeholder="Buscar término..." class="bg-cuaresma border border-oro/40 rounded-lg px-3 py-1 text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none w-full sm:w-64">
+            </div>
+
+            <div id="glosarioGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Rellenado por JS -->
+            </div>
+        </section>
+
+        <!-- TAB 4: GUÍA DE VISITA -->
+        <section id="sec-guia" class="tab-content hidden space-y-4">
+            <div class="border-b border-oro/30 pb-3">
+                <h2 class="text-xl font-bold font-cinzel text-oro">Guía Clave de Visita</h2>
+                <p class="text-xs text-gray-300">Puntos estratégicos y recomendaciones rápidas para no perderte nada</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-cuaresma/60 border border-oro/30 rounded-xl p-4 space-y-2">
+                    <h3 class="font-cinzel text-lg text-oroLight font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-map-pin"></i> La Carrera Oficial
+                    </h3>
+                    <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                        Tramo obligatorio para las 32 cofradías: <strong>Ganivet &rarr; Plaza de las Pasiegas &rarr; Catedral &rarr; Cárcel Baja</strong>. El paso por las Pasiegas frente a la fachada de la Catedral es uno de los momentos cumbres.
+                    </p>
+                </div>
+
+                <div class="bg-cuaresma/60 border border-oro/30 rounded-xl p-4 space-y-2">
+                    <h3 class="font-cinzel text-lg text-oroLight font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-mountain"></i> Barrios Emblemáticos
+                    </h3>
+                    <ul class="text-xs sm:text-sm text-gray-300 space-y-1 list-disc list-inside">
+                        <li><strong>Albaicín:</strong> Estrechez extrema (Aurora, Estrella, Concepción, Silencio).</li>
+                        <li><strong>Sacromonte:</strong> La magia del Cristo de los Gitanos entre fogatas y cuevas.</li>
+                        <li><strong>Realejo:</strong> La devoción popular de las Favores y la Santa Cena.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-cuaresma/60 border border-oro/30 rounded-xl p-4 space-y-2">
+                    <h3 class="font-cinzel text-lg text-oroLight font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-star"></i> Momentos Imperdibles
+                    </h3>
+                    <ul class="text-xs sm:text-sm text-gray-300 space-y-1 list-disc list-inside">
+                        <li><strong>Miércoles Santo:</strong> Regreso de Los Gitanos subiendo al Sacromonte de madrugada.</li>
+                        <li><strong>Jueves Santo:</strong> La noche blanca del Albaicín con 3 palios en la calle.</li>
+                        <li><strong>Viernes Santo:</strong> Rezo de las tres de la tarde en el Campo del Príncipe (Soledad).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-cuaresma/60 border border-oro/30 rounded-xl p-4 space-y-2">
+                    <h3 class="font-cinzel text-lg text-oroLight font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb"></i> Consejos Rápidos
+                    </h3>
+                    <ul class="text-xs sm:text-sm text-gray-300 space-y-1 list-disc list-inside">
+                        <li>Planifica los cruces con antelación: las calles del Albaicín se colapsan.</li>
+                        <li>Usa calzado muy cómodo para adoquines y cuestas pronunciadas.</li>
+                        <li>Consulta las redes locales si hay previsión de lluvia para cambios de última hora.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: QUIZ COFRADE -->
+        <section id="sec-quiz" class="tab-content hidden space-y-4">
+            <div class="border-b border-oro/30 pb-3 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold font-cinzel text-oro">Trivia Cofrade Granadina</h2>
+                    <p class="text-xs text-gray-300">Demuestra cuánto sabes sobre la Semana Santa de Granada</p>
+                </div>
+                <span id="quizScore" class="bg-oro text-moradoDark px-3 py-1 rounded-full font-bold text-xs sm:text-sm">Puntos: 0</span>
+            </div>
+
+            <div id="quizContainer" class="bg-cuaresma/70 border border-oro/40 rounded-xl p-5 max-w-xl mx-auto space-y-4 text-center">
+                <!-- Formulario/Preguntas dinámicas con JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-cuaresma border-t border-oro/30 py-3 text-center text-xs text-gray-400">
+        <p>El Capataz Granadino &copy; 2027 - Respuestas Optimizadas Gemini API</p>
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // --- BASE DE DATOS DE HERMANDADES (32 Hermandades de Granada) ---
+        const hermandadesData = [
+            // Domingo de Ramos
+            { nombre: "Borriquilla", dia: "Domingo de Ramos", sede: "Parroquia de San Andrés", salida: "16:00", templo: "22:30", barrio: "Centro" },
+            { nombre: "Santa Cena", dia: "Domingo de Ramos", sede: "Iglesia de Santo Domingo", salida: "18:00", templo: "23:30", barrio: "Realejo" },
+            { nombre: "La Encarnación", dia: "Domingo de Ramos", sede: "Monasterio de la Encarnación", salida: "17:30", templo: "22:00", barrio: "Centro" },
+            { nombre: "Despojado", dia: "Domingo de Ramos", sede: "Casa de Hermandad (Chana)", salida: "19:00", templo: "00:30", barrio: "Fígares/Chana" },
+            { nombre: "Maravillas", dia: "Domingo de Ramos", sede: "Iglesia de San Pedro y San Pablo", salida: "18:15", templo: "23:45", barrio: "Carrera del Darro" },
+            
+            // Lunes Santo
+            { nombre: "Trabajo y Luz", dia: "Lunes Santo", sede: "Iglesia del Corpus Christi", salida: "16:00", templo: "23:40", barrio: "Zaidín" },
+            { nombre: "Nuestra Señora de los Dolores", dia: "Lunes Santo", sede: "Iglesia de San Pedro y San Pablo", salida: "18:00", templo: "23:55", barrio: "Carrera del Darro" },
+            { nombre: "El Rescate", dia: "Lunes Santo", sede: "Iglesia de la Magdalena", salida: "17:45", templo: "00:00", barrio: "Centro" },
+            { nombre: "San Agustín", dia: "Lunes Santo", sede: "Iglesia del Santo Ángel Custodio", salida: "20:30", templo: "00:15", barrio: "Centro" },
+            { nombre: "Huerto de los Olivos", dia: "Lunes Santo", sede: "Monasterio de las Comendadoras", salida: "17:00", templo: "22:30", barrio: "Realejo" },
+
+            // Martes Santo
+            { nombre: "La Lanzada", dia: "Martes Santo", sede: "Iglesia de los Dolores (Zaidín)", salida: "16:35", templo: "23:10", barrio: "Zaidín" },
+            { nombre: "Vía Crucis", dia: "Martes Santo", sede: "Iglesia de San Juan de los Reyes", salida: "20:15", templo: "23:30", barrio: "Albaicín" },
+            { nombre: "La Esperanza", dia: "Martes Santo", sede: "Iglesia de San Gil y San Nicholas", salida: "18:40", templo: "00:15", barrio: "Plaza Nueva" },
+            { nombre: "La Cañilla (Humildad)", dia: "Martes Santo", sede: "Iglesia de Santo Domingo", salida: "19:15", templo: "00:00", barrio: "Realejo" },
+
+            // Miércoles Santo
+            { nombre: "Los Gitanos", dia: "Miércoles Santo", sede: "Abadía del Sacromonte / del Javir", salida: "16:45", templo: "03:00", barrio: "Sacromonte" },
+            { nombre: "Estudiantes", dia: "Miércoles Santo", sede: "Iglesia de San Justo y Pastor", salida: "17:30", templo: "22:45", barrio: "Centro/Universidad" },
+            { nombre: "Las Penas", dia: "Miércoles Santo", sede: "Iglesia de San Matías", salida: "19:10", templo: "23:45", barrio: "Centro" },
+            { nombre: "Rosario", dia: "Miércoles Santo", sede: "Iglesia de Santo Domingo", salida: "19:00", templo: "00:00", barrio: "Realejo" },
+            { nombre: "Nazareno", dia: "Miércoles Santo", sede: "Monasterio de San José (Carmelitas)", salida: "20:15", templo: "00:30", barrio: "Centro" },
+
+            // Jueves Santo
+            { nombre: "La Aurora", dia: "Jueves Santo", sede: "Iglesia de San Miguel Bajo", salida: "17:40", templo: "01:00", barrio: "Albaicín" },
+            { nombre: "La Concha", dia: "Jueves Santo", sede: "Monasterio de la Concepción", salida: "18:30", templo: "00:45", barrio: "Albaicín" },
+            { nombre: "Salesianos", dia: "Jueves Santo", sede: "Iglesia de María Auxiliadora", salida: "17:00", templo: "23:00", barrio: "Zaidín" },
+            { nombre: "La Estrella", dia: "Jueves Santo", sede: "Iglesia de Cristóbal", salida: "18:00", templo: "01:30", barrio: "Albaicín" },
+            { nombre: "El Silencio", dia: "Jueves Santo", sede: "Iglesia de San Pedro y San Pablo", salida: "00:00", templo: "03:00", barrio: "Carrera del Darro" },
+
+            // Viernes Santo
+            { nombre: "Campo del Príncipe (Soledad)", dia: "Viernes Santo", sede: "Señor de los Favores", salida: "15:00", templo: "15:30", barrio: "Realejo (Acto)" },
+            { nombre: "Ferroviarios", dia: "Viernes Santo", sede: "Iglesia de San Juan de Dios", salida: "16:30", templo: "22:30", barrio: "Centro" },
+            { nombre: "Favores", dia: "Viernes Santo", sede: "Iglesia de San Cecilio", salida: "18:45", templo: "00:20", barrio: "Realejo" },
+            { nombre: "Mayor Dolor (Escolapios)", dia: "Viernes Santo", sede: "Iglesia de San José de Calasanz", salida: "18:00", templo: "23:30", barrio: "Genil" },
+            { nombre: "Santo Entierro", dia: "Viernes Santo", sede: "Iglesia de San Gil y San Nicolás", salida: "19:00", templo: "23:00", barrio: "Centro" },
+            { nombre: "Soledad de San Jerónimo", dia: "Viernes Santo", sede: "Monasterio de San Jerónimo", salida: "18:15", templo: "23:45", barrio: "Centro" },
+
+            // Sábado Santo
+            { nombre: "Santa María de la Alhambra", dia: "Sábado Santo", sede: "Iglesia de la Alhambra", salida: "17:00", templo: "23:00", barrio: "Alhambra" },
+
+            // Domingo de Resurrección
+            { nombre: "El Facundillo", dia: "Domingo de Resurrección", sede: "Iglesia de Santo Domingo", salida: "10:15", templo: "14:15", barrio: "Realejo" },
+            { nombre: "Resucitado y Alegría", dia: "Domingo de Resurrección", sede: "Iglesia del Sagrario", salida: "11:30", templo: "15:00", barrio: "Centro" }
+        ];
+
+        // --- GLOSARIO DATA ---
+        const glosarioData = [
+            { term: "Capataz", def: "Persona responsable de dirigir el paso de una cofradía y dar las órdenes a los costaleros." },
+            { term: "Costalero", def: "Persona que lleva el peso del paso sobre la cerviz protegida por un costal." },
+            { term: "Chicotá", def: "Trayecto que realiza un paso desde que se levanta (llamada) hasta que vuelve a 'fijarse' en el suelo." },
+            { term: "Llamador / Tarja", def: "Pieza de metal articulada en el frontal del paso usada por el capataz para avisar la levantá." },
+            { term: "Carrera Oficial", def: "Recorrido común y obligatorio para todas las hermandades de penitencia (Ganivet - Pasiegas - Catedral)." },
+            { term: "Paso de Palio", def: "Paso que porta a la Santísima Virgen resguardada bajo un palio bordado." },
+            { term: "Paso de Misterio", def: "Paso de gran tamaño que representa una escena o pasaje de la Pasión de Cristo." },
+            { term: "Saeta", def: "Canto flamenco religioso improvisado al paso de las imágenes." },
+            { term: "Greñúo", def: "Apodo afectuoso de la imagen del Santísimo Cristo del Rescate." }
+        ];
+
+        // --- QUIZ DATA ---
+        const quizQuestions = [
+            {
+                q: "¿Qué hermandad procesiona el Miércoles Santo hasta la Abadía del Sacromonte entre hogueras?",
+                options: ["Los Estudiantes", "Los Gitanos", "El Silencio", "Las Penas"],
+                correct: 1
+            },
+            {
+                q: "¿En qué emblemática plaza se reza a las 3 de la tarde el Viernes Santo ante el Cristo de los Favores?",
+                options: ["Plaza Nueva", "Plaza de las Pasiegas", "Campo del Príncipe", "Plaza Larga"],
+                correct: 2
+            },
+            {
+                q: "¿Qué hermandad realiza su salida en absoluto silencio a medianoche del Jueves Santo?",
+                options: ["San Agustín", "El Silencio", "Santo Entierro", "Vía Crucis"],
+                correct: 1
+            },
+            {
+                q: "¿Qué apodo popular recibe el Cristo del Rescate de la Iglesia de la Magdalena?",
+                options: ["El Moreno", "El Greñúo", "El Señor de Granada", "El Gitano"],
+                correct: 1
+            }
+        ];
+
+        // --- ESTADO DE LA APP ---
+        let currentTab = 'asistente';
+        let isTTSActive = true;
+        let isRecording = false;
+        let recognition = null;
+        let quizIndex = 0;
+        let quizScore = 0;
+
+        // --- GEMINI API CONFIGURATION ---
+        const GEMINI_API_KEY = ""; // En runtime se inserta o utiliza la integración automática del entorno
+        const GEMINI_MODEL = "gemini-3-flash-preview";
+
+        // Prompt de Sistema para forzar RESPUESTAS MÁS RESUMIDAS Y DIRECTAS
+        const CAPATAZ_SYSTEM_PROMPT = `
+Eres 'El Capataz Granadino', un experto, cercano y respetuoso conocedor de la Semana Santa de Granada (España).
+REGLA DE ORO OBLIGATORIA:
+1. Tus respuestas DEBEN SER ULTRA RESUMIDAS, CONCISAS Y DIRECTAS AL GRANO.
+2. Máximo 2 a 3 párrafos cortos o una lista de puntos clave extremadamente breves.
+3. Evita introducciones largas, rodeos o floreos innecesarios.
+4. Usa jerga cofrade granadina con sutileza (ej: "¡A esta es!", "Oído", "Costalero"), pero manteniendo la concisión absoluta.
+5. Si te preguntan horarios, da solo los datos clave (Salida, Carrera Oficial, Templo) sin textos de relleno.
+`;
+
+        // Prompt History para el asistente
+        let chatHistory = [];
+
+        // Inicializar al cargar la página
+        window.onload = function() {
+            renderHermandades(hermandadesData);
+            renderGlosario(glosarioData);
+            initQuiz();
+            setupVoiceRecognition();
+        };
+
+        // Cambiar pestañas
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-oro', 'text-moradoDark', 'font-bold');
+                btn.classList.add('hover:bg-cofradeAccent', 'text-gray-200');
+            });
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.remove('hover:bg-cofradeAccent', 'text-gray-200');
+            activeBtn.classList.add('bg-oro', 'text-moradoDark', 'font-bold');
+        }
+
+        // --- CHAT LOGIC WITH GEMINI API ---
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('userInput');
+            const query = inputEl.value.trim();
+            if (!query) return;
+
+            inputEl.value = '';
+            addChatMessage('user', query);
+
+            // Mostrar loader
+            const loadingId = addLoadingIndicator();
+
+            try {
+                const responseText = await fetchGeminiResponse(query);
+                removeLoadingIndicator(loadingId);
+                addChatMessage('assistant', responseText);
+
+                if (isTTSActive) {
+                    speakText(responseText);
+                }
+            } catch (err) {
+                removeLoadingIndicator(loadingId);
+                addChatMessage('assistant', '¡Oído! Ha habido un leve enganche en el paso. Inténtalo de nuevo, costalero.');
+                console.error(err);
+            }
+        }
+
+        function sendQuickPrompt(promptText) {
+            document.getElementById('userInput').value = promptText;
+            handleChatSubmit(new Event('submit'));
+        }
+
+        async function fetchGeminiResponse(userQuery) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+            
+            // Construir payload
+            chatHistory.push({ role: 'user', parts: [{ text: userQuery }] });
+
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: {
+                    parts: [{ text: CAPATAZ_SYSTEM_PROMPT }]
+                }
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Respuesta sin datos.";
+
+            // Guardar turno de la respuesta corta en el historial
+            chatHistory.push({ role: 'model', parts: [{ text: textResponse }] });
+
+            return textResponse;
+        }
+
+        function addChatMessage(role, text) {
+            const chatBox = document.getElementById('chatBox');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex items-start gap-3";
+
+            if (role === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="flex-grow flex justify-end">
+                        <div class="bg-cofradeAccent/80 border border-oro/20 rounded-2xl rounded-tr-none p-3 max-w-[85%] text-gray-100 shadow text-sm">
+                            ${escapeHtml(text)}
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-gray-600 text-white font-bold flex items-center justify-center shrink-0 text-xs">Tú</div>
+                `;
+            } else {
+                // Formatear texto breve de Gemini
+                const formattedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-oro text-moradoDark font-bold flex items-center justify-center shrink-0 text-xs">CG</div>
+                    <div class="bg-cuaresma border border-oro/30 rounded-2xl rounded-tl-none p-3 max-w-[85%] text-gray-200 shadow text-sm">
+                        <p class="font-semibold text-oro mb-1 text-xs">El Capataz Granadino</p>
+                        <div>${formattedText}</div>
+                    </div>
+                `;
+            }
+
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function addLoadingIndicator() {
+            const chatBox = document.getElementById('chatBox');
+            const id = 'loading-' + Date.now();
+            const loader = document.createElement('div');
+            loader.id = id;
+            loader.className = "flex items-start gap-3";
+            loader.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-oro text-moradoDark font-bold flex items-center justify-center shrink-0 text-xs">CG</div>
+                <div class="bg-cuaresma border border-oro/30 rounded-2xl rounded-tl-none p-3 text-gray-400 text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-circle-notch animate-spin text-oro"></i>
+                    <span>Consultando el libro de itinerarios conciso...</span>
+                </div>
+            `;
+            chatBox.appendChild(loader);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return id;
+        }
+
+        function removeLoadingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // --- SÍNTESIS DE VOZ (TTS) & RECONOCIMIENTO ---
+        function toggleTTS() {
+            isTTSActive = !isTTSActive;
+            const icon = document.getElementById('iconTTS');
+            if (isTTSActive) {
+                icon.className = "fa-solid fa-volume-high";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-gray-400";
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            }
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            // Limpiar marcas markdown
+            const cleanText = text.replace(/[\*\#\_]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.05; // Un poco más ágil
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function setupVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'es-ES';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('userInput').value = transcript;
+                    stopVoiceRecognition();
+                    handleChatSubmit(new Event('submit'));
+                };
+
+                recognition.onerror = () => stopVoiceRecognition();
+                recognition.onend = () => stopVoiceRecognition();
+            } else {
+                document.getElementById('btnVoiceRec').style.display = 'none';
+            }
+        }
+
+        function toggleVoiceRecognition() {
+            if (!recognition) return;
+            if (isRecording) {
+                stopVoiceRecognition();
+            } else {
+                isRecording = true;
+                const micIcon = document.getElementById('micIcon');
+                micIcon.className = "fa-solid fa-circle text-red-500 animate-pulse";
+                recognition.start();
+            }
+        }
+
+        function stopVoiceRecognition() {
+            isRecording = false;
+            const micIcon = document.getElementById('micIcon');
+            if (micIcon) micIcon.className = "fa-solid fa-microphone";
+            if (recognition) recognition.stop();
+        }
+
+        // --- RENDER CALENDARIO / HERMANDADES ---
+        function renderHermandades(list) {
+            const container = document.getElementById('hermandadesList');
+            container.innerHTML = '';
+
+            list.forEach(h => {
+                const card = document.createElement('div');
+                card.className = "bg-cuaresma/60 border border-oro/30 rounded-xl p-3 shadow hover:border-oro/60 transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-oro font-cinzel text-sm">${h.nombre}</h3>
+                            <span class="bg-moradoDark text-yellow-300 text-[10px] px-2 py-0.5 rounded-full border border-oro/30 font-semibold">${h.dia}</span>
+                        </div>
+                        <p class="text-xs text-gray-300 mb-2"><i class="fa-solid fa-church text-oro/70 mr-1"></i>${h.sede} (${h.barrio})</p>
+                    </div>
+                    <div class="flex justify-between text-xs bg-moradoDark/80 p-2 rounded-lg border border-oro/20 mt-2">
+                        <span><strong class="text-gray-400">Salida:</strong> <span class="text-white">${h.salida}</span></span>
+                        <span><strong class="text-gray-400">Regreso:</strong> <span class="text-white">${h.templo}</span></span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterHermandades() {
+            const filterVal = document.getElementById('dayFilter').value;
+            if (filterVal === 'todos') {
+                renderHermandades(hermandadesData);
+            } else {
+                const filtered = hermandadesData.filter(h => h.dia === filterVal);
+                renderHermandades(filtered);
+            }
+        }
+
+        // --- RENDER GLOSARIO ---
+        function renderGlosario(list) {
+            const container = document.getElementById('glosarioGrid');
+            container.innerHTML = '';
+
+            list.forEach(g => {
+                const card = document.createElement('div');
+                card.className = "bg-cuaresma/60 border border-oro/30 rounded-xl p-3 shadow";
+                card.innerHTML = `
+                    <h3 class="font-bold text-oroLight font-cinzel text-sm mb-1">${g.term}</h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">${g.def}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterGlosario() {
+            const query = document.getElementById('searchGlosario').value.toLowerCase();
+            const filtered = glosarioData.filter(g => 
+                g.term.toLowerCase().includes(query) || g.def.toLowerCase().includes(query)
+            );
+            renderGlosario(filtered);
+        }
+
+        // --- TRIVIA / QUIZ LOGIC ---
+        function initQuiz() {
+            quizIndex = 0;
+            quizScore = 0;
+            document.getElementById('quizScore').innerText = `Puntos: ${quizScore}`;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const container = document.getElementById('quizContainer');
+            if (quizIndex >= quizQuestions.length) {
+                container.innerHTML = `
+                    <i class="fa-solid fa-trophy text-4xl text-oro mb-2"></i>
+                    <h3 class="font-cinzel text-xl text-white font-bold">¡Quiz Completado!</h3>
+                    <p class="text-sm text-gray-200">Puntuación Final: <strong class="text-oro">${quizScore} / ${quizQuestions.length * 10}</strong></p>
+                    <button onclick="initQuiz()" class="mt-3 bg-oro hover:bg-oroLight text-moradoDark font-bold px-4 py-2 rounded-xl text-xs transition">
+                        Reiniciar Quiz
+                    </button>
+                `;
+                return;
+            }
+
+            const qData = quizQuestions[quizIndex];
+            container.innerHTML = `
+                <span class="text-xs text-yellow-300/70 font-semibold">Pregunta ${quizIndex + 1} de ${quizQuestions.length}</span>
+                <h3 class="font-bold text-white text-base">${qData.q}</h3>
+                <div class="grid grid-cols-1 gap-2 pt-2">
+                    ${qData.options.map((opt, i) => `
+                        <button onclick="checkQuizAnswer(${i})" class="bg-moradoDark hover:bg-cofradeAccent border border-oro/30 p-2.5 rounded-xl text-xs sm:text-sm text-left text-gray-200 transition">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function checkQuizAnswer(selectedIdx) {
+            const qData = quizQuestions[quizIndex];
+            if (selectedIdx === qData.correct) {
+                quizScore += 10;
+            }
+            quizIndex++;
+            document.getElementById('quizScore').innerText = `Puntos: ${quizScore}`;
+            renderQuestion();
+        }
+
+        // --- AUXILIARES ---
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>

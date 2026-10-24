@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+:root {
+  --bg-app: #fcf9f2;
+  --bg-subtle: #f4ecdf;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #faf5ec;
+  --bg-card-hover: #ffffff;
+  --text-primary: #1a1613;
+  --text-secondary: #443c33;
+  --text-muted: #786d5e;
+  --border-subtle: rgba(180, 131, 40, 0.22);
+  --border-strong: rgba(180, 131, 40, 0.52);
+  --accent-gold: #9e6417;
+  --accent-gold-light: #cf9534;
+  --accent-gold-foil: #f1bf5d;
+  --accent-gold-bg: rgba(180, 131, 40, 0.1);
+  --accent-burgundy: #73131d;
+  --accent-morado: #3e124d;
+  --shadow-elevation: 0 4px 20px -2px rgba(60, 40, 15, 0.07), 0 2px 6px -1px rgba(60, 40, 15, 0.04);
+  --shadow-hover: 0 14px 30px -4px rgba(60, 40, 15, 0.14), 0 0 16px rgba(180, 131, 40, 0.18);
+  --candle-glow: rgba(245, 158, 11, 0.12);
+}
+
+[data-theme="dark"] {
+  --bg-app: #0b0908;
+  --bg-subtle: #14110e;
+  --bg-card: #171310;
+  --bg-card-subtle: #1e1915;
+  --bg-card-hover: #241e19;
+  --text-primary: #faf6ee;
+  --text-secondary: #ded6c8;
+  --text-muted: #a69b8b;
+  --border-subtle: rgba(220, 165, 50, 0.28);
+  --border-strong: rgba(220, 165, 50, 0.62);
+  --accent-gold: #e28a12;
+  --accent-gold-light: #f6c042;
+  --accent-gold-foil: #fde087;
+  --accent-gold-bg: rgba(226, 138, 18, 0.16);
+  --accent-burgundy: #991b1b;
+  --accent-morado: #581c87;
+  --shadow-elevation: 0 6px 28px -4px rgba(0, 0, 0, 0.7);
+  --shadow-hover: 0 16px 38px -4px rgba(0, 0, 0, 0.85), 0 0 20px rgba(226, 138, 18, 0.22);
+  --candle-glow: rgba(245, 158, 11, 0.22);
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    background-image: 
+      radial-gradient(circle at 50% 0%, var(--candle-glow) 0%, transparent 60%),
+      radial-gradient(circle at 100% 15%, rgba(62, 18, 77, 0.05) 0%, transparent 45%),
+      radial-gradient(circle at 0% 85%, rgba(115, 19, 29, 0.05) 0%, transparent 45%),
+      /* Subtle sacred brocade damask weave */
+      radial-gradient(rgba(180, 131, 40, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px;
+    background-attachment: fixed;
+    letter-spacing: -0.012em;
+  }
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.045em;
+}
+
+.font-serif-book {
+  font-family: 'Lora', Georgia, serif;
+}
+
+/* Master Editorial Cofrade Card & Elevated Surfaces */
+.cofrade-card,
+.editorial-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-elevation);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.cofrade-card-hover,
+.editorial-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cofrade-card-hover:hover,
+.editorial-card-hover:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2.5px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Ornate Cofrade Gold Border with corner star flourishes (Pan de Oro) */
+.cofrade-ornate-border {
+  border: 1px solid var(--border-strong);
+  position: relative;
+  background-image: radial-gradient(circle at 50% 0%, var(--accent-gold-bg) 0%, transparent 75%);
+}
+
+.cofrade-ornate-border::before,
+.cofrade-ornate-border::after {
+  content: '✦';
+  position: absolute;
+  font-size: 9px;
+  color: var(--accent-gold);
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.cofrade-ornate-border::before {
+  top: 5px;
+  left: 5px;
+}
+
+.cofrade-ornate-border::after {
+  top: 5px;
+  right: 5px;
+}
+
+/* Pan de Oro Gold Foil Text Shader */
+.gold-gradient-text {
+  background: linear-gradient(135deg, var(--accent-gold-foil) 0%, var(--accent-gold) 50%, var(--accent-gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-fill-color: transparent;
+  text-shadow: 0 0 25px rgba(212, 175, 55, 0.28);
+}
+
+/* Shimmering Gold Foil Animation */
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--accent-gold) 0%,
+    var(--accent-gold-foil) 30%,
+    var(--accent-gold) 60%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-fill-color: transparent;
+  animation: goldShimmer 6s linear infinite;
+}
+
+/* Sacred Brocade Divider */
+.sacred-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--accent-gold);
+  margin: 16px 0;
+  opacity: 0.75;
+}
+
+.sacred-divider::before,
+.sacred-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+}
+
+/* Velvet Burgundy Accents */
+.velvet-badge {
+  background: linear-gradient(135deg, rgba(115, 19, 29, 0.16) 0%, rgba(62, 18, 77, 0.16) 100%);
+  border: 1px solid rgba(180, 131, 40, 0.4);
+  color: var(--accent-gold);
+}
+
+/* Candle Flame Animation */
+@keyframes flameFlicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.85));
+  }
+  25% {
+    transform: scale(1.08, 0.95) rotate(1.2deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.95));
+  }
+  50% {
+    transform: scale(0.96, 1.05) rotate(-2deg);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.7));
+  }
+  75% {
+    transform: scale(1.04, 0.98) rotate(1.5deg);
+    opacity: 0.98;
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9));
+  }
+}
+
+.animate-flame {
+  animation: flameFlicker 2.2s infinite ease-in-out;
+}
+
+/* Soundwave Equalizer Bars */
+@keyframes soundwave1 {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+
+@keyframes soundwave2 {
+  0%, 100% { height: 12px; }
+  50% { height: 5px; }
+}
+
+@keyframes soundwave3 {
+  0%, 100% { height: 6px; }
+  50% { height: 16px; }
+}
+
+.animate-soundwave-1 {
+  animation: soundwave1 0.7s infinite ease-in-out;
+}
+
+.animate-soundwave-2 {
+  animation: soundwave2 0.85s infinite ease-in-out;
+}
+
+.animate-soundwave-3 {
+  animation: soundwave3 0.65s infinite ease-in-out;
+}
+
+/* Archival scrollbars */
+.scrollbar-cofrade::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-cofrade::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+
+.scrollbar-cofrade::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 9999px;
+}
+
+.scrollbar-cofrade::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold-light);
+}
+
+/* Clean tabular numerals across all schedules */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "El Capataz Granadino - IA Semana Santa Granada",
+  "description": "Tu asistente e IA experta en la Semana Santa de Granada: itinerarios, cofradías, horarios, historia y rincones cofrades con respuestas precisas, de calidad y concisas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
